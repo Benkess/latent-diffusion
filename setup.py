@@ -10,4 +10,9 @@ setup(
         'numpy',
         'tqdm',
     ],
+    entry_points={
+        'console_scripts': [
+            'ldm-txt2img=scripts.txt2img:main',
+        ],
+    },
 )

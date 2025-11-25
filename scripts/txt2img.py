@@ -43,7 +43,7 @@ def load_model_from_config(config, ckpt, verbose=False):
     return model
 
 
-if __name__ == "__main__":
+def main(argv=None):
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
@@ -114,7 +114,7 @@ if __name__ == "__main__":
         default=5.0,
         help="unconditional guidance scale: eps = eps(x, empty) + scale * (eps(x, cond) - eps(x, empty))",
     )
-    opt = parser.parse_args()
+    opt = parser.parse_args(argv)
 
 
     config = OmegaConf.load("configs/latent-diffusion/txt2img-1p4B-eval.yaml")  # TODO: Optionally download from same location as ckpt and chnage this logic
@@ -176,3 +176,7 @@ if __name__ == "__main__":
     Image.fromarray(grid.astype(np.uint8)).save(os.path.join(outpath, f'{prompt.replace(" ", "-")}.png'))
 
     print(f"Your samples are ready and waiting four you here: \n{outpath} \nEnjoy.")
+
+
+if __name__ == "__main__":
+    main()

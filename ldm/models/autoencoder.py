@@ -76,7 +76,22 @@ class VQModel(pl.LightningModule):
                     print(f"{context}: Restored training weights")
 
     def init_from_ckpt(self, path, ignore_keys=list()):
-        sd = torch.load(path, map_location="cpu")["state_dict"]
+        # torch.load in recent PyTorch defaults to weights-only loading which
+        # disallows arbitrary pickled objects. Older checkpoints may contain
+        # additional objects (e.g., pytorch_lightning ModelCheckpoint) and
+        # require loading with weights_only=False. Try the safe load first,
+        # and fall back to weights_only=False when necessary.
+        try:
+            loaded = torch.load(path, map_location="cpu")
+        except Exception:
+            # retry allowing pickled objects (only do this if you trust the
+            # checkpoint source)
+            loaded = torch.load(path, map_location="cpu", weights_only=False)
+
+        if isinstance(loaded, dict) and "state_dict" in loaded:
+            sd = loaded["state_dict"]
+        else:
+            raise RuntimeError(f"Unexpected checkpoint format when loading {path}")
         keys = list(sd.keys())
         for k in keys:
             for ik in ignore_keys:
