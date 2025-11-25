@@ -3,6 +3,7 @@ This is a readme for the MILA final project: training an LDM model on the SYSU d
 
 ## Local test commands
 ```bash
+# Quick test
 CUDA_VISIBLE_DEVICES=0 python main.py \
   --base configs/latent-diffusion/sysu-ldm-vq-f8.yaml \
   -t --gpus 0, \
@@ -10,9 +11,22 @@ CUDA_VISIBLE_DEVICES=0 python main.py \
   --name sysu_smoketest \
   --no-test True \
   lightning.trainer.max_steps=500 \
-  lightning.callbacks.image_logger.params.batch_frequency=200 \
+  lightning.callbacks.image_logger.params.batch_frequency=400 \
   data.params.batch_size=4 \
   data.params.num_workers=2 \
+  model.params.log_every_t=200
+
+# Local training
+CUDA_VISIBLE_DEVICES=0 python main.py \
+  --base configs/latent-diffusion/sysu-ldm-vq-f8.yaml \
+  -t --gpus 0, \
+  --scale_lr False \
+  --name sysu_local_long \
+  --no-test True \
+  lightning.trainer.max_steps=10000 \
+  lightning.callbacks.image_logger.params.batch_frequency=1000 \
+  data.params.batch_size=4 \
+  data.params.num_workers=4 \
   model.params.log_every_t=200
 ```
 
