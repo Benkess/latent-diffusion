@@ -1,5 +1,12 @@
 import argparse, os, sys, datetime, glob, importlib, csv
 import numpy as np
+
+# Compatibility shim for NumPy 2.0: older code (and some library versions)
+# expect `np.Inf` to exist. NumPy 2.0 removed that alias in favor of `np.inf`.
+# Define `np.Inf` if it's missing so downstream imports (e.g. PyTorch Lightning)
+# that still reference `np.Inf` don't error.
+if not hasattr(np, "Inf"):
+    np.Inf = np.inf
 import time
 import torch
 import torchvision

@@ -2,9 +2,7 @@ import os
 import random
 from PIL import Image
 import numpy as np
-import torch
 from torch.utils.data import Dataset
-
 
 class SYSUBase(Dataset):
     def __init__(self, data_root=None, root=None, split="train", size=256, flip_p=0.5):
@@ -67,30 +65,27 @@ class SYSUBase(Dataset):
         try:
             img = self._load_image(abs_p)
         except Exception as e:
-            # raise so the training script sees the error early
             raise RuntimeError(f"Error loading image {abs_p}: {e}")
 
         # random horizontal flip for train
         if self.split == "train" and random.random() < self.flip_p:
             img = np.fliplr(img).copy()
 
-        # normalize to [-1, 1]
+        # normalize to [-1, 1] and return HWC numpy array (float32)
         img = (img / 127.5) - 1.0
+        img = img.astype(np.float32)
 
-        # convert to CHW torch tensor (float32) which LDM expects
-        if isinstance(img, np.ndarray):
-            # img is HWC
-            img = img.astype(np.float32)
-            img = torch.from_numpy(img).permute(2, 0, 1).contiguous()
-
-        example = {
-            "image": img,  # torch.FloatTensor, CxHxW in [-1,1]
-            "class_label": int(label),
+        # return a dict compatible with other datasets in this repo:
+        # DataModuleFromConfig / model expect keys: 'image' and 'class_label'
+        # also return file path keys used in logging/sampling code
+        return {
+            "image": img,
+            "class_label": label,
+            "fname": rel_p,
+            "relative_file_path_": rel_p,
             "file_path_": abs_p,
-            "relpath": rel_p,
+            "human_label": self.classes[label],
         }
-
-        return example
 
 
 class SYSUTrain(SYSUBase):
