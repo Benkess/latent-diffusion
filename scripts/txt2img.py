@@ -7,6 +7,19 @@ from tqdm import tqdm, trange
 from einops import rearrange
 from torchvision.utils import make_grid
 
+# ensure the project root and src are on sys.path so editable installs and local packages import correctly
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
+SRC = os.path.join(ROOT, 'src')
+if SRC not in sys.path:
+    sys.path.insert(0, SRC)
+# also add taming-transformers source dir explicitly (some editable installs use src/ layout)
+TAMING_SRC = os.path.join(SRC, 'taming-transformers')
+if os.path.isdir(TAMING_SRC) and TAMING_SRC not in sys.path:
+    sys.path.insert(0, TAMING_SRC)
+
+
 from ldm.util import instantiate_from_config
 from ldm.models.diffusion.ddim import DDIMSampler
 from ldm.models.diffusion.plms import PLMSSampler
