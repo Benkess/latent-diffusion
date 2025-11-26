@@ -1,6 +1,18 @@
 # MILA: SYSU
 This is a readme for the MILA final project: training an LDM model on the SYSU dataset.
 
+## Sever Setup
+```bash
+source /etc/profile.d/modules.sh
+module load miniforge
+
+# in your home or project dir
+cd ~/projects/school/mila/latent-diffusion  # or wherever you cloned the repo
+
+conda env create -f environment.yaml
+conda activate ldm
+```
+
 ## Local test commands
 ```bash
 # Quick test
