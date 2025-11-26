@@ -5,7 +5,7 @@
 #SBATCH --time=1:00:00   # job time limit
 #SBATCH --nodes=1   # number of nodes
 #SBATCH --ntasks-per-node=1   # number of tasks per node
-#SBATCH --cpus-per-task=4   # number of CPU cores per task
+#SBATCH --cpus-per-task=8   # number of CPU cores per task
 #SBATCH --gres=gpu:1   # gpu devices per node
 #SBATCH --partition=gpu   # partition
 #SBATCH --mem=128G   # memory
