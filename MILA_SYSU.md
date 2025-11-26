@@ -61,7 +61,7 @@ CUDA_VISIBLE_DEVICES=0 python main.py \
   model.params.log_every_t=200
 
 # Continue from checkpoint test
-CKPT=logs/2025-11-26T10-54-22_sysu_local_long/checkpoints/epoch=000005.ckpt
+CKPT=logs/2025-11-26T10-54-22_sysu_smoketest/checkpoints/epoch=000001.ckpt
 CUDA_VISIBLE_DEVICES=0 python main.py \
   --base configs/latent-diffusion/sysu-ldm-vq-f8.yaml \
   -t --gpus 0, \
@@ -69,7 +69,7 @@ CUDA_VISIBLE_DEVICES=0 python main.py \
   --name sysu_resume_test \
   --no-test True \
   --resume_from_checkpoint $CKPT \
-  lightning.trainer.max_steps=500 \
+  lightning.trainer.max_steps=1000 \
   lightning.callbacks.image_logger.params.batch_frequency=400 \
   data.params.batch_size=4 \
   data.params.num_workers=4 \
