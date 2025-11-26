@@ -68,7 +68,7 @@ CUDA_VISIBLE_DEVICES=0 python main.py \
   --scale_lr False \
   --name sysu_resume_test \
   --no-test True \
-  --resume_from_checkpoint logs/2025-11-26T10-54-22_sysu_local_long/checkpoints/epoch=000005.ckpt \
+  --resume_from_checkpoint $CKPT \
   lightning.trainer.max_steps=500 \
   lightning.callbacks.image_logger.params.batch_frequency=400 \
   data.params.batch_size=4 \
@@ -83,7 +83,7 @@ CUDA_VISIBLE_DEVICES=0 python main.py \
   --scale_lr False \
   --name sysu_resume \
   --no-test True \
-  --resume_from_checkpoint logs/2025-11-26T10-54-22_sysu_local_long/checkpoints/epoch=000005.ckpt \
+  --resume_from_checkpoint $CKPT \
   lightning.trainer.max_steps=60000 \
   lightning.callbacks.image_logger.params.batch_frequency=2000 \
   data.params.batch_size=4 \
