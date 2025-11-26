@@ -18,3 +18,20 @@
 
 
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
+source /etc/profile.d/modules.sh
+module load miniforge
+conda activate ldm
+export PYTHONPATH=/sfs/gpfs/tardis/home/mxk3rz/latent-diffusion/src/taming-transformers:$PYTHONPATH
+
+# Quick test
+CUDA_VISIBLE_DEVICES=0 python main.py \
+  --base configs/latent-diffusion/sysu-ldm-vq-f8.yaml \
+  -t --gpus 0, \
+  --scale_lr False \
+  --name sysu_smoketest \
+  --no-test True \
+  lightning.trainer.max_steps=500 \
+  lightning.callbacks.image_logger.params.batch_frequency=400 \
+  data.params.batch_size=4 \
+  data.params.num_workers=2 \
+  model.params.log_every_t=200
