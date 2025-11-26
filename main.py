@@ -12,6 +12,15 @@ import torch
 import torchvision
 import pytorch_lightning as pl
 
+# --- Patch for PyTorch 2.6+ safe loading of Lightning checkpoints ---
+import torch.serialization
+from pytorch_lightning.callbacks.model_checkpoint import ModelCheckpoint
+
+# Allow Lightning's ModelCheckpoint to be unpickled when weights_only=True
+torch.serialization.add_safe_globals([ModelCheckpoint])
+# -------------------------------------------------------------------
+
+
 from packaging import version
 from omegaconf import OmegaConf
 from torch.utils.data import random_split, DataLoader, Dataset, Subset
