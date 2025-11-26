@@ -1,15 +1,15 @@
 #!/bin/bash
 
-#Submit this script with: sbatch myjob.slurm
+#Submit this script with: sbatch mlia_ldm_smoketest.slurm
 
 #SBATCH --time=1:00:00   # job time limit
 #SBATCH --nodes=1   # number of nodes
 #SBATCH --ntasks-per-node=1   # number of tasks per node
-#SBATCH --cpus-per-task=1   # number of CPU cores per task
+#SBATCH --cpus-per-task=4   # number of CPU cores per task
 #SBATCH --gres=gpu:1   # gpu devices per node
 #SBATCH --partition=gpu   # partition
-#SBATCH --mem=200G   # memory
-#SBATCH -J "mlia_ldm"   # job name
+#SBATCH --mem=128G   # memory
+#SBATCH -J "mlia_ldm_smoketest"   # job name
 #SBATCH --mail-user=mxk3rz@virginia.edu   # email address
 #SBATCH --mail-type=BEGIN
 #SBATCH --mail-type=END
@@ -18,12 +18,24 @@
 
 
 # LOAD MODULES, INSERT CODE, AND RUN YOUR PROGRAMS HERE
+# --- Environment setup ---
 source /etc/profile.d/modules.sh
 module load miniforge
+
+# make sure 'conda' is available in batch mode
+# (miniforge module usually handles this)
 conda activate ldm
+
+# go to your project directory
+cd /sfs/gpfs/tardis/home/mxk3rz/latent-diffusion
+
+# add taming-transformers to PYTHONPATH
 export PYTHONPATH=/sfs/gpfs/tardis/home/mxk3rz/latent-diffusion/src/taming-transformers:$PYTHONPATH
 
-# Quick test
+# (optional but nice) fail fast on errors
+# set -e
+
+# --- Quick training smoke test ---
 CUDA_VISIBLE_DEVICES=0 python main.py \
   --base configs/latent-diffusion/sysu-ldm-vq-f8.yaml \
   -t --gpus 0, \
