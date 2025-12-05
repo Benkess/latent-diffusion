@@ -131,8 +131,9 @@ To evaluate generated images against real validation set:
 ```bash
 # Example: Compute metrics for generated samples
 python scripts/compute_metrics.py \
-  --gen_folder outputs/samples_for_metrics \
+  --gen_folder /home/user/temp_data/mlia/samples/5080_m1_60k \
   --real_folder data/sysu_shape/val \
-  --max_images 5000
+  --max_images 5000 \
+  --batch_size 100
 ```
 This outputs FID and IS scores (uses GPU if available, CPU fallback).
