@@ -137,3 +137,25 @@ python scripts/compute_metrics.py \
   --batch_size 100
 ```
 This outputs FID and IS scores (uses GPU if available, CPU fallback).
+
+### Plot TensorBoard Losses
+To extract and plot loss curves from TensorBoard logs without the web UI:
+```bash
+pip install tbparse matplotlib
+python scripts/plot_tensorboard.py --logdir logs/your_run/testtube/version_0 --output_dir plots
+```
+This saves PNG plots for train/loss_simple_step, train/loss_epoch, val/loss, and val/loss_simple_ema, plus a CSV of all scalars.
+
+To see all available tags in your logs:
+```bash
+python scripts/plot_tensorboard.py --logdir logs/your_run/testtube/version_0 --list_tags
+```
+Then plot specific tags with:
+```bash
+python scripts/plot_tensorboard.py --logdir logs/your_run/testtube/version_0 --output_dir plots --tags "train/loss_step" "val/loss_ema"
+```
+
+This is similar to:
+```
+tensorboard --logdir logs/ --port 6006
+```
