@@ -104,3 +104,35 @@ CUDA_VISIBLE_DEVICES=0 python scripts/sample_sysu_classes.py \
   --ddim_steps 200 \
   --eta 1.0
 ```
+
+## Visualization and Metrics
+
+### Visualize SYSU Dataset
+To visualize original and processed images from the SYSU validation set:
+```bash
+python scripts/visualize_sysu.py
+```
+This saves sample images to `sysu_samples/` for inspection.
+
+### Sample Images for Metrics
+To generate individual images for FID/IS computation:
+```bash
+# Example: Sample 1000 images per class (5000 total) from a checkpoint
+CKPT=logs/your_run/checkpoints/last.ckpt
+python scripts/sample_for_metrics.py \
+  --ckpt "$CKPT" \
+  --outdir outputs/samples_for_metrics \
+  --n_per_class 1000 \
+  --batch_size 10
+```
+
+### Compute FID and Inception Score
+To evaluate generated images against real validation set:
+```bash
+# Example: Compute metrics for generated samples
+python scripts/compute_metrics.py \
+  --gen_folder outputs/samples_for_metrics \
+  --real_folder data/sysu_shape/val \
+  --max_images 5000
+```
+This outputs FID and IS scores (uses GPU if available, CPU fallback).

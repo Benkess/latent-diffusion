@@ -5,6 +5,8 @@ from pathlib import Path
 CLASSES = ["airplane", "bicycle", "boat", "car", "motorbike"]
 IMG_EXTS = (".jpg", ".jpeg", ".png")
 
+# EXCLUDE_FILES = {"voc2012_2008_005315.jpg"}
+
 def ensure_dir(p):
     os.makedirs(p, exist_ok=True)
 
@@ -25,6 +27,7 @@ def main(args):
         if not img_dir.exists():
             raise FileNotFoundError(f"Missing {img_dir}. Repo layout unexpected.")
 
+        # imgs = sorted([p for p in img_dir.glob("*") if p.suffix.lower() in IMG_EXTS and p.name not in EXCLUDE_FILES])
         imgs = sorted([p for p in img_dir.glob("*") if p.suffix.lower() in IMG_EXTS])
         if len(imgs) == 0:
             raise RuntimeError(f"No images found in {img_dir}")
