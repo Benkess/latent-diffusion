@@ -22,7 +22,7 @@ def main():
     # Use validation dataset to avoid random flips
     dataset = SYSUValidation(data_root="data/sysu_shape", size=256)
     classes = dataset.classes
-    n_samples_per_class = 3
+    n_samples_per_class = 5
 
     # Create output directory
     os.makedirs('sysu_samples', exist_ok=True)
