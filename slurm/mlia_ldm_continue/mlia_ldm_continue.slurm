@@ -36,8 +36,8 @@ export PYTHONPATH=/sfs/gpfs/tardis/home/mxk3rz/latent-diffusion/src/taming-trans
 # set -e
 
 # Local training
-CKPT=logs/2025-12-02T11-45-40_mlia_ldm_continue/checkpoints/epoch=000527.ckpt
-CURR_STEP=200000
+CKPT=logs/2025-12-06T14-36-02_mlia_ldm_continue/checkpoints/last.ckpt
+CURR_STEP=150000
 ADD_STEPS=50000
 STEPS=$((CURR_STEP + ADD_STEPS))
 CUDA_VISIBLE_DEVICES=0 python main.py \
@@ -48,6 +48,7 @@ CUDA_VISIBLE_DEVICES=0 python main.py \
   --no-test True \
   --resume_from_checkpoint $CKPT \
   lightning.trainer.max_steps=$STEPS \
+  lightning.trainer.accumulate_grad_batches=4 \
   lightning.callbacks.image_logger.params.batch_frequency=2000 \
   data.params.batch_size=4 \
   data.params.num_workers=4 \
