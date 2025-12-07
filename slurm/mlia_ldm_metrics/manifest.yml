@@ -1,0 +1,5 @@
+---
+name: mlia_ldm_metrics
+host: rivanna
+notes: "<p>Change these notes by editing the manifest.yml in this template&#39;s directory</p>\r\n"
+script: mlia_ldm_metrics.slurm

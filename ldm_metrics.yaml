@@ -1,0 +1,12 @@
+name: ldm_metrics
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+    - torch
+    - torchvision
+    - torchmetrics>=1.4.0
+    - tbparse
+    - matplotlib
