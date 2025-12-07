@@ -163,9 +163,11 @@ class SYSUTrain(SYSUBase):
         # default flip for train is 0.5 unless specified
         if "flip_p" not in kwargs:
             kwargs["flip_p"] = 0.5
-        # keep small default probabilities unless user overrides
-        kwargs.setdefault("resize_larger_prob", 0.01)
-        kwargs.setdefault("edge_crop_bias_prob", 0.05)
+        # Ben's augmentation settings for A100 batch_size=64 training
+        # Increase resize_larger (5% -> 10%) to see uncut objects, but not too high (avoids margin artifacts)
+        # Keep edge_crop_bias low to prevent overfitting to cropped views
+        kwargs.setdefault("resize_larger_prob", 0.10)   # 10% - show full objects without margins
+        kwargs.setdefault("edge_crop_bias_prob", 0.05)  # 5% - minimal crop variation (original setting)
         super().__init__(**kwargs)
 
 
