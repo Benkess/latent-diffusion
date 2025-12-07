@@ -6,7 +6,7 @@ from torch.utils.data import Dataset
 
 class SYSUBase(Dataset):
     def __init__(self, data_root=None, root=None, split="train", size=256, flip_p=0.5,
-                 resize_larger_prob=0.01, edge_crop_bias_prob=0.05):
+                 resize_larger_prob=0.05, edge_crop_bias_prob=0.20):
         """
         data_root or root: path to dataset root which contains train/ and val/ folders
         split: 'train' or 'val'
@@ -164,8 +164,8 @@ class SYSUTrain(SYSUBase):
         if "flip_p" not in kwargs:
             kwargs["flip_p"] = 0.5
         # keep small default probabilities unless user overrides
-        kwargs.setdefault("resize_larger_prob", 0.01)
-        kwargs.setdefault("edge_crop_bias_prob", 0.05)
+        kwargs.setdefault("resize_larger_prob", 0.05)
+        kwargs.setdefault("edge_crop_bias_prob", 0.20)
         super().__init__(**kwargs)
 
 
