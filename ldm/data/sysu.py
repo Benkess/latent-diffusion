@@ -6,7 +6,8 @@ from torch.utils.data import Dataset
 
 class SYSUBase(Dataset):
     def __init__(self, data_root=None, root=None, split="train", size=256, flip_p=0.5,
-                 resize_larger_prob=0.05, edge_crop_bias_prob=0.20):
+                 resize_larger_prob=0.05, edge_crop_bias_prob=0.20,
+                 allowed_classes=None):
         """
         data_root or root: path to dataset root which contains train/ and val/ folders
         split: 'train' or 'val'
@@ -37,6 +38,27 @@ class SYSUBase(Dataset):
         classes = sorted([d for d in os.listdir(self.split_dir) if os.path.isdir(os.path.join(self.split_dir, d))])
         if len(classes) == 0:
             raise RuntimeError(f"No class subfolders found in {self.split_dir}")
+
+        # Optionally allow filtering the dataset to only a subset of classes.
+        # "allowed_classes" may be a single string ("planes"), a comma-separated
+        # string ("planes,cars"), or a list of strings (e.g. ["planes", "cars"]).
+        self.allowed_classes = allowed_classes
+        if allowed_classes:
+            if isinstance(allowed_classes, str):
+                # support comma-separated lists
+                if "," in allowed_classes:
+                    allowed_list = [s.strip() for s in allowed_classes.split(",") if s.strip()]
+                else:
+                    allowed_list = [allowed_classes.strip()]
+            else:
+                # assume an iterable of strings
+                allowed_list = [str(c).strip() for c in allowed_classes]
+
+            # Check names exist in dataset and filter
+            missing = [c for c in allowed_list if c not in classes]
+            if len(missing) > 0:
+                raise RuntimeError(f"allowed_classes not found in dataset split '{self.split}': {missing}")
+            classes = [c for c in classes if c in allowed_list]
 
         self.classes = classes
         self.class_to_idx = {c: i for i, c in enumerate(self.classes)}

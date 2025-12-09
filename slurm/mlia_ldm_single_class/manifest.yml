@@ -1,0 +1,5 @@
+---
+name: mlia_ldm_single_class
+host: rivanna
+notes: "<p>Train an LDM on a single class (e.g., 'planes') from the SYSU dataset.</p>"
+script: mlia_ldm_single_class.slurm

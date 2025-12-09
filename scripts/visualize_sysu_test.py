@@ -32,6 +32,8 @@ def main():
                         help='horizontal flip probability (applied last)')
     parser.add_argument('--n_per_class', type=int, default=5)
     parser.add_argument('--seed', type=int, default=42)
+    parser.add_argument('--classes', type=str, default=None,
+                        help='optional comma-separated list of classes to visualize (default: all)')
     args = parser.parse_args()
 
     # seed RNGs for reproducible examples
@@ -45,6 +47,7 @@ def main():
         resize_larger_prob=args.resize_prob,
         edge_crop_bias_prob=args.edge_bias_prob,
         flip_p=args.flip_prob,
+        allowed_classes=args.classes if args.classes else None,
     )
 
     classes = dataset.classes
