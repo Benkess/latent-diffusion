@@ -23,7 +23,7 @@ torch.serialization.add_safe_globals([ModelCheckpoint])
 
 from packaging import version
 from omegaconf import OmegaConf
-from torch.utils.data import random_split, DataLoader, Dataset, Subset, WeightedRandomSampler
+from torch.utils.data import random_split, DataLoader, Dataset, Subset
 from functools import partial
 from PIL import Image
 
@@ -178,13 +178,12 @@ def worker_init_fn(_):
 class DataModuleFromConfig(pl.LightningDataModule):
     def __init__(self, batch_size, train=None, validation=None, test=None, predict=None,
                  wrap=False, num_workers=None, shuffle_test_loader=False, use_worker_init_fn=False,
-                 shuffle_val_dataloader=False, use_balanced_sampler=False):
+                 shuffle_val_dataloader=False):
         super().__init__()
         self.batch_size = batch_size
         self.dataset_configs = dict()
         self.num_workers = num_workers if num_workers is not None else batch_size * 2
         self.use_worker_init_fn = use_worker_init_fn
-        self.use_balanced_sampler = use_balanced_sampler
         if train is not None:
             self.dataset_configs["train"] = train
             self.train_dataloader = self._train_dataloader
@@ -217,32 +216,9 @@ class DataModuleFromConfig(pl.LightningDataModule):
             init_fn = worker_init_fn
         else:
             init_fn = None
-
-        # Class-balanced sampling for imbalanced datasets (like SYSU)
-        sampler = None
-        shuffle = False if is_iterable_dataset else True
-        if self.use_balanced_sampler and not is_iterable_dataset:
-            dataset = self.datasets['train']
-            # Check if dataset has class labels (samples attribute with class indices)
-            if hasattr(dataset, 'samples') and len(dataset.samples) > 0:
-                # Get class labels from samples (third element is class_idx)
-                labels = [s[2] for s in dataset.samples]
-                # Compute class weights (inverse frequency)
-                class_counts = np.bincount(labels)
-                class_weights = 1.0 / class_counts
-                # Assign weight to each sample based on its class
-                sample_weights = [class_weights[label] for label in labels]
-                sampler = WeightedRandomSampler(
-                    weights=sample_weights,
-                    num_samples=len(dataset),
-                    replacement=True
-                )
-                shuffle = False  # Cannot use shuffle with sampler
-                print(f"Using balanced sampler: class_counts={class_counts.tolist()}, weights={class_weights.tolist()}")
-
         return DataLoader(self.datasets["train"], batch_size=self.batch_size,
-                          num_workers=self.num_workers, shuffle=shuffle,
-                          sampler=sampler, worker_init_fn=init_fn)
+                          num_workers=self.num_workers, shuffle=False if is_iterable_dataset else True,
+                          worker_init_fn=init_fn)
 
     def _val_dataloader(self, shuffle=False):
         if isinstance(self.datasets['validation'], Txt2ImgIterableBaseDataset) or self.use_worker_init_fn:
