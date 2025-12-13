@@ -7,16 +7,18 @@ source /etc/profile.d/modules.sh
 module load miniforge
 
 # in your home or project dir
-cd ~/projects/school/mila/latent-diffusion  # or wherever you cloned the repo
-git checkout mila
+cd /standard/mlia/MLIA_Team_11_LDM/latent-diffusion  # or wherever you cloned the repo
+# git checkout sysu_ldm
 
 conda env create -f environment.yaml
 conda activate ldm
 ```
 
 ```
-export PYTHONPATH=/sfs/gpfs/tardis/home/mxk3rz/latent-diffusion/src/taming-transformers:$PYTHONPATH
-python scripts/prepare_sysu_shape.py --src-root /home/mxk3rz/sysu-shape-dataset # or wherever you cloned the repo
+# add taming-transformers to PYTHONPATH
+export PYTHONPATH=/standard/mlia/MLIA_Team_11_LDM/latent-diffusion/src/taming-transformers:$PYTHONPATH
+# add the dataset if training or doing metrics
+python scripts/prepare_sysu_shape.py --src-root /home/mxk3rz/sysu-shape-dataset 
 ```
 
 Download the [VQ-f8 model](https://ommer-lab.com/files/latent-diffusion/vq-f8.zip) and unzip it into `latent-diffusion/models/first_stage_models/vq-f8/`.

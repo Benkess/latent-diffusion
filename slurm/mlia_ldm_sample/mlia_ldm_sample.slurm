@@ -27,7 +27,7 @@ module load miniforge
 conda activate ldm
 
 # go to your project directory
-cd /sfs/gpfs/tardis/home/mxk3rz/latent-diffusion
+cd /standard/mlia/MLIA_Team_11_LDM/models/SYSU_LDM_1/model/last.ckpt
 
 # add taming-transformers to PYTHONPATH
 export PYTHONPATH=/sfs/gpfs/tardis/home/mxk3rz/latent-diffusion/src/taming-transformers:$PYTHONPATH
